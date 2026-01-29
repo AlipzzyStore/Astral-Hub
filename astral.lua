@@ -1,116 +1,123 @@
--- [[ ASTRAL - HUB | FISH IT ]] --
--- Key Link: https://direct-link.net/3093354/7idYaWbdsZbh
+-- [[ ASTRAL HUB - FISH IT OPTIMIZED ]] --
+local CorrectKey = "JknagOHAN217KMnbaisP"
+local KeyLink = "https://direct-link.net/3093354/7idYaWbdsZbh"
 
-local MaterialLua = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/MaterialLua/master/Module.lua"))()
+-- Memanggil Library Rayfield (Lebih Stabil di Mobile/Delta)
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
--- Variabel Key (Ganti 'HASIL_DARI_LINK' dengan key asli yang kamu taruh di Linkvertise)
-local CorrectKey = "JknagOHAN217KMnbaisP" 
-
--- Fungsi Booting / Loading
-local function Startup()
-    print("Loading Astral - Hub...")
-    -- Di sini kamu bisa menambahkan animasi loading kustom
-end
-
-local UI = MaterialLua:Load({
-    Title = "Astral - Hub | Fish It",
-    Style = 3,
-    SizeX = 500,
-    SizeY = 350,
-    Theme = "Dark",
-    -- Menggunakan logo kamu
-    Icon = "rbxassetid://1nlzlf" -- Catatan: Jika ini link eksternal, harus diupload ke Roblox dulu atau gunakan custom image loader
+local Window = Rayfield:CreateWindow({
+   Name = "Astral - Hub | Fish It",
+   LoadingTitle = "Loading Astral Hub...",
+   LoadingSubtitle = "by AlipzzyOfficiaL & Nanzcnl",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = "AstralHubData"
+   },
+   KeySystem = true, -- Mengaktifkan Key System Bawaan agar Aman & Ringan
+   KeySettings = {
+      Title = "Astral - Hub | Key System",
+      Subtitle = "Ambil Key di Linkvertise",
+      Note = "Link sudah ada di tombol 'Get Key'",
+      FileName = "AstralKey",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = {CorrectKey}
+   }
 })
 
+-- Tombol Get Key (Muncul di UI Key)
+Rayfield:SetClipboard(KeyLink)
+
 -- ================= TAB 1: INFO =================
-local Info = UI:New({ Title = "Info" })
-local Players = game:GetService("Players")
-local LP = Players.LocalPlayer
+local TabInfo = Window:CreateTab("Info", 4483362458) -- Icon ID
+local SectionInfo = TabInfo:CreateSection("User Stats")
 
-Info:Section("User Information")
-Info:Label("Username: " .. LP.Name)
-Info:Label("Display Name: " .. LP.DisplayName)
-Info:Label("Rod Used: [Detecting...]") -- Perlu script tambahan untuk deteksi alat
+local LP = game.Players.LocalPlayer
+local AvatarImg = "https://www.roblox.com/headshot-thumbnail/image?userId="..LP.UserId.."&width=420&height=420&format=png"
 
-Info:Section("Developers")
-Info:Label("Developer: AlipzzyOfficiaL")
-Info:Label("Owner: Nanzcnl")
+TabInfo:CreateLabel("Welcome, " .. LP.DisplayName .. " (@" .. LP.Name .. ")")
+TabInfo:CreateLabel("Developer: AlipzzyOfficiaL")
+TabInfo:CreateLabel("Owner: Nanzcnl")
 
-Info:Button({
-    Text = "Copy Discord Link",
-    Callback = function()
-        setclipboard("https://discord.gg/EQethSggwR")
+-- Fitur Deteksi Rod (Placeholder - Sesuaikan dengan Nama Folder Tool di game)
+local RodLabel = TabInfo:CreateLabel("Current Rod: Detecting...")
+task.spawn(function()
+    while task.wait(2) do
+        local tool = LP.Character:FindFirstChildOfClass("Tool") or LP.Backpack:FindFirstChildOfClass("Tool")
+        if tool then RodLabel:Set("Current Rod: " .. tool.Name) end
     end
+end)
+
+TabInfo:CreateButton({
+   Name = "Copy Discord Link",
+   Callback = function() setclipboard("https://discord.gg/EQethSggwR") end,
 })
 
 -- ================= TAB 2: FARM =================
-local Farm = UI:New({ Title = "Farm" })
-Farm:Toggle({ Text = "Fishing Instant", Callback = function(v) _G.Instant = v end })
-Farm:Toggle({ Text = "Blatant V1", Callback = function(v) end })
-Farm:Slider({ Text = "Reel Delay", Min = 0, Max = 10, Def = 1, Callback = function(v) end })
+local TabFarm = Window:CreateTab("Farm", 4483362458)
+TabFarm:CreateToggle({
+   Name = "Fishing Instant",
+   CurrentValue = false,
+   Callback = function(Value) _G.InstantFish = Value end,
+})
+TabFarm:CreateSlider({
+   Name = "Reel Delay",
+   Min = 0, Max = 10, CurrentValue = 1, Flag = "Slider1",
+   Callback = function(Value) _G.ReelDelay = Value end,
+})
+TabFarm:CreateButton({ Name = "Blatant V1", Callback = function() end })
+TabFarm:CreateButton({ Name = "Blatant V2", Callback = function() end })
 
 -- ================= TAB 3: TELEPORT =================
-local TP = UI:New({ Title = "Teleport" })
-TP:Dropdown({
-    Text = "Select Map",
-    List = {"Main Sea", "Enchant Island", "Winter Zone"},
-    Callback = function(v) print("Selected: " .. v) end
+local TabTP = Window:CreateTab("Teleport", 4483362458)
+local PlayerDropdown = TabTP:CreateDropdown({
+   Name = "Select Player",
+   Options = {"Loading..."},
+   Callback = function(Option) _G.SelectedPlayer = Option end,
 })
-TP:Button({ Text = "Teleport to Enchant", Callback = function() end })
 
--- ================= TAB 4: EVENT =================
-local Event = UI:New({ Title = "Event" })
-Event:Label("Active Events will appear here")
+-- Update Player List
+task.spawn(function()
+    while task.wait(5) do
+        local tbl = {}
+        for _, v in pairs(game.Players:GetPlayers()) do table.insert(tbl, v.Name) end
+        PlayerDropdown:Refresh(tbl)
+    end
+end)
 
--- ================= TAB 5: QUEST =================
-local Quest = UI:New({ Title = "Quest" })
-Quest:Toggle({ Text = "Auto Ghost Rod Quest", Callback = function(v) end })
-Quest:Toggle({ Text = "Auto Element Rod", Callback = function(v) end })
+TabTP:CreateButton({ Name = "Teleport to Player", Callback = function() 
+    local target = game.Players:FindFirstChild(_G.SelectedPlayer)
+    if target then LP.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame end
+end})
 
--- ================= TAB 6: SHOP =================
-local Shop = UI:New({ Title = "Shop" })
-Shop:Button({ Text = "Buy Bait", Callback = function() end })
-Shop:Button({ Text = "Spin Skin", Callback = function() end })
+-- ================= TAB 4-8 (PLACEHOLDERS) =================
+local TabEvent = Window:CreateTab("Event", 4483362458)
+local TabQuest = Window:CreateTab("Quest", 4483362458)
+local TabShop = Window:CreateTab("Shop", 4483362458)
+local TabMisc = Window:CreateTab("Misc", 4483362458)
+local TabWebhook = Window:CreateTab("Webhook", 4483362458)
 
--- ================= TAB 7: MISC =================
-local Misc = UI:New({ Title = "Misc" })
-Misc:Toggle({ Text = "Walk on Water", Callback = function(v) end })
-Misc:Toggle({ Text = "Noclip", Callback = function(v) end })
-
--- ================= TAB 8: WEBHOOK =================
-local Webhook = UI:New({ Title = "Webhook" })
-Webhook:TextField({
-    Text = "Enter Webhook URL",
-    Callback = function(v) _G.WebhookURL = v end
+-- Isi Misc Dasar
+TabMisc:CreateToggle({
+   Name = "Walk on Water",
+   CurrentValue = false,
+   Callback = function(v) 
+        if v then -- Logic jalan di air
+        end
+   end,
 })
+TabMisc:CreateButton({ Name = "Noclip (Soon)", Callback = function() end })
 
 -- ================= TAB 9: PREMIUM =================
-local Premium = UI:New({ Title = "Upgrade To Premium" })
-Premium:Button({
-    Text = "Get Premium (Discord)",
-    Callback = function()
-        setclipboard("https://discord.gg/EQethSggwR")
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Astral Hub",
-            Text = "Link Discord disalin! Silahkan buka browser."
-        })
-    end
+local TabPremium = Window:CreateTab("Premium", 4483362458)
+TabPremium:CreateButton({
+   Name = "Upgrade to Premium (Discord)",
+   Callback = function() setclipboard("https://discord.gg/EQethSggwR") end,
 })
 
--- SISTEM CHECK KEY (Sederhana)
-local KeyWindow = UI:New({ Title = "Key System" })
-KeyWindow:TextField({
-    Text = "Paste Key Here",
-    Callback = function(v)
-        if v == CorrectKey then
-            print("Access Granted!")
-            -- Logika untuk membuka tab lainnya bisa ditaruh di sini
-        end
-    end
-})
-KeyWindow:Button({
-    Text = "Get Key (Linkvertise)",
-    Callback = function()
-        setclipboard("https://direct-link.net/3093354/7idYaWbdsZbh")
-    end
+Rayfield:Notify({
+   Title = "Astral Hub Loaded",
+   Content = "Enjoy Scripting, "..LP.Name,
+   Duration = 5,
+   Image = 4483362458,
 })
