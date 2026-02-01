@@ -1,114 +1,115 @@
--- [[ ALIPZZY STUDIO | ASTRAL HUB V1 - GACOR EDITION ]] --
--- MAP: FISH IT | TARGET: ALL DATA UNLOCKED
-local CorrectKey = "JknagOHAN217KMnbaisP"
-local KeyLink = "https://direct-link.net/3093354/7idYaWbdsZbh"
+-- [[ ALIPZZY STUDIO | ASTRAL HUB V24 - OFFICIAL BRANDING ]] --
+local LP = game.Players.LocalPlayer
+local NetFolder = game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_net@0.2.0"):WaitForChild("net")
 
-setclipboard(KeyLink)
+-- Fungsi Universal Remote (RE) & Invoke (RF)
+local function FireNet(name, args)
+    local remote = NetFolder:FindFirstChild("RE/" .. name)
+    if remote then remote:FireServer(unpack(args or {})) end
+end
 
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local function InvokeNet(name, args)
+    local remote = NetFolder:FindFirstChild("RF/" .. name)
+    if remote then return remote:InvokeServer(unpack(args or {})) end
+end
 
-local Window = Rayfield:CreateWindow({
-   Name = "AlipzzyStudio | Astral - Hub",
-   LoadingTitle = "Astral X Hub V1",
+-- [[ LOAD ASTRAL HUB GUI ENGINE ]] --
+local AstralEngine = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Window = AstralEngine:CreateWindow({
+   Name = "Astral Hub | Fish It - V29",
+   LoadingTitle = "ASTRAL HUB: SUPREME",
    LoadingSubtitle = "by AlipzzyOfficiaL & Nanzcnl",
-   ConfigurationSaving = { Enabled = true, FolderName = "AlipzzyStudio_Gacor" },
-   KeySystem = true, 
+   ConfigurationSaving = { Enabled = true, FolderName = "AstralHub_Data" },
+   KeySystem = true,
    KeySettings = {
-      Title = "AlipzzyStudio | Key System",
+      Title = "Astral Hub | Key System",
       Subtitle = "Link Auto-Copied!",
-      Note = "Anti-AFK & Anti-Staff Active",
-      FileName = "AlipzzyKey",
-      SaveKey = true,
-      Key = {CorrectKey},
-      Actions = { [1] = { Text = "Get Key (Linkvertise)", OnPress = function() setclipboard(KeyLink) end } }
+      Key = {"JknagOHAN217KMnbaisP"},
+      Actions = { [1] = { Text = "Get Key", OnPress = function() setclipboard("https://direct-link.net/3093354/7idYaWbdsZbh") end } }
    }
 })
 
--- [[ PERLINDUNGAN GACOR: ANTI-AFK & ANTI-STAFF ]] --
-local LP = game.Players.LocalPlayer
-local VirtualUser = game:GetService("VirtualUser")
+-- ================= TAB: BLATANT (V1 & V2) =================
+local TabBlatant = Window:CreateTab("Blatant Mode", 4483362458)
 
--- Anti-AFK (Agar tidak terputus setelah 20 menit)
-LP.Idled:Connect(function()
-    VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-    wait(1)
-    VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-end)
-
--- Anti-Owner / Staff Detection (Auto-Kick)
-game.Players.PlayerAdded:Connect(function(player)
-    -- Kamu bisa menambahkan UserID owner game di sini
-    if player:GetRankInGroup(game.CreatorId) > 100 or player.Name == "OwnerName" then 
-        LP:Kick("🛡️ AlipzzyStudio: Staff/Owner Detected! Server Hopping for Safety...")
-        wait(2)
-        game:GetService("TeleportService"):Teleport(game.PlaceId, LP)
-    end
-end)
-
--- ================= TAB 1: INFO =================
-local TabInfo = Window:CreateTab("Info", 4483362458)
-TabInfo:CreateLabel("👤 Account: " .. LP.Name)
-TabInfo:CreateLabel("🎖️ Status: Gacor User")
-TabInfo:CreateLabel("🛠️ Dev: AlipzzyOfficiaL | 👑 Owner: Nanzcnl")
-TabInfo:CreateButton({Name = "Copy Discord Link", Callback = function() setclipboard("https://discord.gg/EQethSggwR") end})
-
--- ================= TAB 2: FARM (GACOR LOGIC) =================
-local TabFarm = Window:CreateTab("Auto Farm", 4483362458)
-TabFarm:CreateToggle({Name = "Auto Fishing (Cast/Catch)", CurrentValue = false, Callback = function(v) _G.AutoFish = v end})
-TabFarm:CreateToggle({Name = "Fast Reel (Instant)", CurrentValue = false, Callback = function(v) _G.FastReel = v end})
-TabFarm:CreateToggle({Name = "Auto Sell Fish", CurrentValue = false, Callback = function(v) _G.AutoSell = v end})
-
--- ================= TAB 3: TELEPORT (ALL ISLANDS) =================
-local TabTP = Window:CreateTab("Teleport", 4483362458)
-TabTP:CreateDropdown({
-   Name = "Select Island",
-   Options = {"Spawn","Coral Reef","Enchant Island","Winter Zone","Deep Abyss","Lava Crater","Ancient City","Mushroom Cave","Shark Den","Sunken Ship"},
+TabBlatant:CreateSection("Blatant V1: God Speed")
+TabBlatant:CreateToggle({
+   Name = "Instant Catch (No Delay)",
+   CurrentValue = false,
    Callback = function(v)
-       -- Di sini kamu bisa mengisi koordinat Vector3 spesifik untuk setiap pulau
-       Rayfield:Notify({Title="Teleporting...", Content="Traveling to "..v, Duration=2})
+      _G.Blatant = v
+      task.spawn(function()
+          while _G.Blatant do
+              FireNet("EquipToolFromHotbar", {1})
+              InvokeNet("ChargeFishingRod")
+              FireNet("CastLine")
+              -- Koordinat Presisi
+              InvokeNet("RequestFishingMinigameStarted", {[-1.233184814453125, 0.5, 1769879353.189754]})
+              FireNet("FishingCompleted")
+              task.wait(0.05)
+          end
+      end)
    end,
 })
 
--- ================= TAB 4: QUEST (ALL RODS) =================
-local TabQuest = Window:CreateTab("Quest", 4483362458)
-TabQuest:CreateToggle({Name = "Auto Ghost Rod (Collect Souls)", CurrentValue = false, Callback = function(v) end})
-TabQuest:CreateToggle({Name = "Auto Element Rod Quest", CurrentValue = false, Callback = function(v) end})
-TabQuest:CreateToggle({Name = "Auto Diamond Rod Quest", CurrentValue = false, Callback = function(v) end})
-
--- ================= TAB 5: SHOP & INVENTORY =================
-local TabShop = Window:CreateTab("Shop", 4483362458)
-TabShop:CreateDropdown({
-   Name = "Buy All Rods",
-   Options = {"Carbon","Golden","Magma","Ice","Ghost","Element","Diamond","Cyber","Ancient"},
-   Callback = function(v) end,
+TabBlatant:CreateSection("Blatant V2: World Chaos")
+TabBlatant:CreateToggle({
+   Name = "Auto TP Best Spots (Infinite)",
+   CurrentValue = false,
+   Callback = function(v)
+       _G.AutoTP = v
+       local Spots = {
+           Vector3.new(542, 25, -1200),  -- Enchant Island
+           Vector3.new(-1500, -500, 2000), -- Deep Abyss
+           Vector3.new(2000, 50, 3000)   -- Lava Crater
+       }
+       local i = 1
+       task.spawn(function()
+           while _G.AutoTP do
+               if LP.Character then
+                   LP.Character.HumanoidRootPart.CFrame = CFrame.new(Spots[i])
+                   i = i % #Spots + 1
+               end
+               task.wait(8)
+           end
+       end)
+   end,
 })
-TabShop:CreateDropdown({
-   Name = "Buy All Baits",
-   Options = {"Worm","Minnow","Squid","Golden Bait","Christmas Bait","Legendary Lure"},
-   Callback = function(v) end,
+
+-- ================= TAB: FARM (LEGIT MODE) =================
+local TabLegit = Window:CreateTab("Legit Farm", 4483362458)
+
+TabLegit:CreateToggle({
+   Name = "Safe Auto Fishing",
+   CurrentValue = false,
+   Callback = function(v)
+      _G.Legit = v
+      task.spawn(function()
+          while _G.Legit do
+              InvokeNet("UpdateFishingRadar", {true})
+              FireNet("EquipToolFromHotbar", {1})
+              InvokeNet("ChargeFishingRod")
+              FireNet("CastLine")
+              task.wait(2.5) -- Meniru gerakan manusia
+              InvokeNet("RequestFishingMinigameStarted", {[-1.233184814453125, 0.5, 1769879353.189754]})
+              task.wait(1)
+              FireNet("FishingCompleted")
+              task.wait(1.5)
+          end
+      end)
+   end,
 })
 
--- ================= TAB 6: MISC (OP) =================
-local TabMisc = Window:CreateTab("Misc", 4483362458)
-TabMisc:CreateToggle({Name = "Walk On Water (Jalan di Air)", CurrentValue = false, Callback = function(v) end})
-TabMisc:CreateToggle({Name = "Noclip (Tembus Tembok)", CurrentValue = false, Callback = function(v) end})
-TabMisc:CreateSlider({Name = "WalkSpeed", Min = 16, Max = 500, CurrentValue = 16, Callback = function(v) LP.Character.Humanoid.WalkSpeed = v end})
+-- ================= TAB: SHOP & WORLD =================
+local TabWorld = Window:CreateTab("World & Shop", 4483362458)
 
--- ================= TAB 7: SERVER TOOLS =================
-local TabServer = Window:CreateTab("Server", 4483362458)
-TabServer:CreateButton({Name = "Server Hop (Pindah Server)", Callback = function() 
-    game:GetService("TeleportService"):Teleport(game.PlaceId, LP)
-end})
-TabServer:CreateButton({Name = "Rejoin Server", Callback = function() 
-    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LP)
-end})
+TabWorld:CreateSection("Weather Control")
+TabWorld:CreateButton({ Name = "Buy RADIANT", Callback = function() InvokeNet("PurchaseWeatherEvent", {"Radiant"}) end })
+TabWorld:CreateButton({ Name = "Buy STORM", Callback = function() InvokeNet("PurchaseWeatherEvent", {"Storm"}) end })
 
--- ================= TAB 8: PREMIUM =================
-local TabPrem = Window:CreateTab("Premium", 4483362458)
-TabPrem:CreateButton({Name = "Contact AlipzzyStudio for Premium", Callback = function() setclipboard("https://discord.gg/EQethSggwR") end})
+TabWorld:CreateSection("Utility Shop")
+TabWorld:CreateButton({ Name = "Buy 20x Bait", Callback = function() InvokeNet("PurchaseBait", {20}) end })
+TabWorld:CreateButton({ Name = "Buy Merchant Totem", Callback = function() InvokeNet("PurchaseMarketItem", {7}) end })
+TabWorld:CreateButton({ Name = "Buy God Rod (77)", Callback = function() InvokeNet("PurchaseFishingRod", {77}) end })
 
-Rayfield:Notify({
-   Title = "AlipzzyStudio Gacor!",
-   Content = "Anti-AFK is now protecting your session.",
-   Duration = 5,
-})
+AstralEngine:Notify({Title = "Astral Hub", Content = "Welcome, Alipzzy & Nanzcnl!", Duration = 5})
